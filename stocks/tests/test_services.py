@@ -1,7 +1,9 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from stocks.services.polygon_service import get_stock_data
-from stocks.services.marketwatch_service import get_marketwatch_data
+from stocks.services.aws_lambda.polygon_lambda.lambda_function import get_stock_data
+from stocks.services.aws_lambda.marketwatch_lambda.lambda_function import (
+    get_marketwatch_data,
+)
 from datetime import date
 
 
@@ -9,7 +11,7 @@ from datetime import date
 class TestServices:
     """Tests for external services"""
 
-    @patch("stocks.services.polygon_service.requests.get")
+    @patch("stocks.services.aws_lambda.polygon_lambda.lambda_function.requests.get")
     def test_get_stock_data_success(self, mock_requests):
         """Test get_stock_data returns correct data on success"""
         mock_response = MagicMock()
@@ -29,7 +31,7 @@ class TestServices:
         assert stock_data["open"] == 150.0
         assert stock_data["high"] == 155.0
 
-    @patch("stocks.services.polygon_service.requests.get")
+    @patch("stocks.services.aws_lambda.polygon_lambda.lambda_function.requests.get")
     def test_get_stock_data_404_retry(self, mock_requests):
         """Test get_stock_data retries on 404 error"""
         mock_response_404 = MagicMock()
@@ -57,7 +59,7 @@ class TestServices:
             == (date.today().replace(day=date.today().day - 1)).isoformat()
         )
 
-    @patch("stocks.services.polygon_service.requests.get")
+    @patch("stocks.services.aws_lambda.polygon_lambda.lambda_function.requests.get")
     def test_get_stock_data_fail_after_retries(self, mock_requests):
         """Test get_stock_data raises an error after max retries"""
         mock_response_404 = MagicMock()
@@ -69,7 +71,7 @@ class TestServices:
         ):
             get_stock_data("AAPL", date.today().isoformat())
 
-    @patch("stocks.services.marketwatch_service.requests.get")
+    @patch("stocks.services.aws_lambda.marketwatch_lambda.lambda_function.requests.get")
     def test_get_marketwatch_data_success(self, mock_requests):
         """Test get_marketwatch_data parses HTML and returns correct data"""
         mock_response = MagicMock()
@@ -113,7 +115,7 @@ class TestServices:
         assert competitors[0]["name"] == "Ford Motor Co."
         assert competitors[0]["market_cap"] == "$0.8T"
 
-    @patch("stocks.services.marketwatch_service.requests.get")
+    @patch("stocks.services.aws_lambda.marketwatch_lambda.lambda_function.requests.get")
     def test_get_marketwatch_data_404(self, mock_requests):
         """Test get_marketwatch_data handles 404 error"""
         mock_response = MagicMock()

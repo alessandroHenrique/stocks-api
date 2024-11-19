@@ -70,9 +70,6 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': env.db('sqlite:///db.sqlite3', default='sqlite:///db.sqlite3')
-# }
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -137,11 +134,6 @@ CACHES = {
         "KEY_PREFIX": "stock",
     }
 }
-
-POLYGON_API_KEY = env("POLYGON_API_KEY")
-
-BRIGHTDATA_USER = env("BRIGHTDATA_USER")
-BRIGHTDATA_PASSWORD = env("BRIGHTDATA_PASSWORD")
 
 # Logging
 LOGGING = {

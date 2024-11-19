@@ -1,3 +1,5 @@
+import boto3
+import json
 import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,14 +15,21 @@ from .serializers import (
     MarketCapSerializer,
     CompetitorSerializer,
 )
-from .services.polygon_service import get_stock_data
-from .services.marketwatch_service import get_marketwatch_data
 
 
 logger = logging.getLogger("stocks")
 
 
 class StockAPIView(APIView):
+    def invoke_lambda(self, service_name, payload):
+        client = boto3.client("lambda")
+        response = client.invoke(
+            FunctionName=service_name,
+            InvocationType="RequestResponse",
+            Payload=json.dumps(payload),
+        )
+        return json.loads(response["Payload"].read())
+
     def get_last_valid_day(self):
         current_date = timezone.localtime().date() - timedelta(days=1)
         while current_date.weekday() in [5, 6]:
@@ -39,13 +48,15 @@ class StockAPIView(APIView):
 
         try:
             logger.info(f"Fetching data for {stock_symbol}")
-            polygon_data = get_stock_data(stock_symbol, last_valid_day)
+            polygon_data = self.invoke_lambda(
+                "polygon_data", {"symbol": stock_symbol, "start_date": last_valid_day}
+            ).get("body")
             logger.debug(f"Polygon data fetched: {polygon_data}")
 
             logger.info(f"Fetching data from Market watch")
-            company_name, performance_data, competitors = get_marketwatch_data(
-                stock_symbol
-            )
+            company_name, performance_data, competitors = self.invoke_lambda(
+                "marketwatch_data", {"symbol": stock_symbol}
+            ).get("body")
             logger.debug(
                 f"Marketwatch data fetched for {stock_symbol}: {company_name}, {performance_data}, {competitors}"
             )
@@ -128,9 +139,6 @@ class StockAPIView(APIView):
             logger.error(f"Error while processing {stock_symbol}: {e}")
             return Response({"error": str(e)}, status=500)
 
-        # TODO
-        # adicionar logs
-
     def post(self, request, stock_symbol):
         try:
             amount = request.data.get("amount")
@@ -144,7 +152,10 @@ class StockAPIView(APIView):
 
             if not stock:
                 last_valid_day = self.get_last_valid_day()
-                polygon_data = get_stock_data(stock_symbol, last_valid_day)
+                polygon_data = self.invoke_lambda(
+                    "polygon_data",
+                    {"symbol": stock_symbol, "start_date": last_valid_day},
+                ).get("body")
 
                 stock_data = {
                     "status": polygon_data.get("status"),
