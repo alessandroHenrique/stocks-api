@@ -122,7 +122,7 @@ Add purchased units to a specific stock or create a new record if the stock does
  - Request Payload:
     ```json
     {
-        amount: 10
+        "amount": 10
     }
     ```
  - Example Request Using curl:
