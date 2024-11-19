@@ -19,6 +19,7 @@ babel = "^2.16.0"
 python-dotenv = "^1.0.1"
 python-decouple = "^3.8"
 boto3 = "^1.35.64"
+drf-yasg = "^1.21.8"
 
 
 [tool.poetry.group.dev.dependencies]

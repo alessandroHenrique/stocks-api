@@ -111,3 +111,16 @@ class StockSerializer(serializers.ModelSerializer):
             "performance_data",
             "competitors",
         ]
+
+
+# Serializers for Swagger auto schema
+class StockResponseSerializer(serializers.Serializer):
+    company_code = serializers.CharField()
+    company_name = serializers.CharField()
+    stock_values = serializers.DictField()
+    performance_data = serializers.DictField()
+    competitors = serializers.ListField()
+
+
+class StockRequestSerializer(serializers.Serializer):
+    amount = serializers.IntegerField(help_text="Stock amount (e.g., 10)")

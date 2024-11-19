@@ -5,7 +5,7 @@ class Stock(models.Model):
     status = models.CharField(max_length=100, blank=True)
     purchased_amount = models.IntegerField(default=0)
     purchased_status = models.CharField(max_length=50, blank=True)
-    request_data = models.DateField()
+    request_data = models.DateField(blank=True, null=True)
     company_code = models.CharField(max_length=20, unique=True)
     company_name = models.CharField(max_length=255, blank=True)
 
