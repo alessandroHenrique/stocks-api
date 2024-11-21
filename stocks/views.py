@@ -176,7 +176,7 @@ class StockAPIView(APIView):
         try:
             stock_symbol = stock_symbol.upper()
             amount = request.data.get("amount")
-            if not isinstance(amount, (int, float)) or amount < 0:
+            if not isinstance(amount, (int, float)) or amount <= 0:
                 return Response(
                     {"error": "The 'amount' field must be a positive number."},
                     status=400,
