@@ -123,4 +123,4 @@ class StockResponseSerializer(serializers.Serializer):
 
 
 class StockRequestSerializer(serializers.Serializer):
-    amount = serializers.IntegerField(help_text="Stock amount (e.g., 10)")
+    amount = serializers.FloatField(help_text="Stock amount (e.g., 10)")
