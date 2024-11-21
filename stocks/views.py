@@ -152,6 +152,7 @@ class StockAPIView(APIView):
             self.create_or_update_performance_data(stock, performance_data)
             self.create_or_update_competitors(stock, competitors)
 
+            stock.refresh_from_db()
             stock_serializer = StockSerializer(stock)
             data = stock_serializer.data
             cache.set(cache_key, data, timeout=86400 * 7)
@@ -177,7 +178,6 @@ class StockAPIView(APIView):
                     {"error": "The 'amount' field must be a positive number."},
                     status=400,
                 )
-
             stock = self.get_stock(stock_symbol)
 
             if not stock:
@@ -194,8 +194,11 @@ class StockAPIView(APIView):
                 stock.save()
 
                 cache_key = f"stock_{stock_symbol}"
-                data = cache.get(cache_key)
-                data["purchased_amount"] = stock.purchased_amount
+                if cache.get(cache_key):
+                    data = cache.get(cache_key)
+                    data["purchased_amount"] = stock.purchased_amount
+                else:
+                    data = stock
                 cache.set(cache_key, data, timeout=86400 * 7)
 
             return Response(
