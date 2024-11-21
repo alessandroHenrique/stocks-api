@@ -57,7 +57,7 @@ Ensure you have the following installed before running the project:
     ```bash
     docker-compose up
     ```
-    or simply
+    or simply:
     ```bash
     make start
     ```
@@ -223,6 +223,21 @@ The API uses Redis to cache stock data for quick retrieval. If a request is made
 
 ### AWS Lambda
 Key functionalities for interacting with external services (Polygon and MarketWatch) are offloaded to AWS Lambda, ensuring scalability and reducing latency.
+
+# Tests
+To run the test suite, use the following commands:
+
+```bash
+docker-compose run --rm -e DJANGO_SETTINGS_MODULE=config.settings.test web pytest --cov --cov-report term-missing --disable-warnings
+```
+
+or symply:
+
+```bash
+make test
+```
+
+This command executes unit tests and generates a coverage report.
 
 ## Contato
 For questions or feedback, feel free to reach out:
