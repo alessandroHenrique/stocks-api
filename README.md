@@ -269,7 +269,7 @@ The `logging` module is used throughout the application to capture key events an
 ```python
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("stocks")
 
 def get(self, request, stock_symbol):
     try:
@@ -277,7 +277,7 @@ def get(self, request, stock_symbol):
         # Logic for fetching stock data
     except Exception as e:
         logger.error(f"Error while fetching stock data: {e}")
-        raise
+        return Response({"error": str(e)}, status=500)
 ```
 
 ## Contato
