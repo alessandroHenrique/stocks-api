@@ -160,9 +160,11 @@ class StockAPIView(APIView):
             return Response(data, status=200)
 
         except ValueError as e:
+            logger.error(f"Error while fetching stock data: {e}")
             return Response({"error": str(e)}, status=502)
 
         except Exception as e:
+            logger.error(f"Error while fetching stock data: {e}")
             return Response({"error": str(e)}, status=500)
 
     @swagger_auto_schema(

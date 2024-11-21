@@ -224,7 +224,7 @@ The API uses Redis to cache stock data for quick retrieval. If a request is made
 ### AWS Lambda
 Key functionalities for interacting with external services (Polygon and MarketWatch) are offloaded to AWS Lambda, ensuring scalability and reducing latency.
 
-# Tests
+## Tests
 To run the test suite, use the following commands:
 
 ```bash
@@ -238,6 +238,47 @@ make test
 ```
 
 This command executes unit tests and generates a coverage report.
+
+## **Logging**
+
+The application includes a robust logging system to monitor and debug operations efficiently.
+
+### **Logging Configuration**
+
+Logging is configured in the `settings.py` file, leveraging Python's built-in `logging` module. The configuration can be customized to include different log levels, formats, and output destinations (e.g., console, files, or external logging services).
+
+### **Log Levels**
+
+The application uses the following log levels:
+
+- **DEBUG**: Detailed information for debugging purposes.
+- **INFO**: General information about application events.
+- **WARNING**: Indications of potential issues or unexpected events.
+- **ERROR**: Errors that occurred during execution but allowed the application to continue running.
+- **CRITICAL**: Severe errors causing the application to fail.
+
+### **Logging Outputs**
+
+By default, logs are output to the console, but you can configure additional handlers, such as file handlers or external services like AWS CloudWatch or Sentry.
+
+### **Usage in the Code**
+
+The `logging` module is used throughout the application to capture key events and errors. Examples:
+
+#### **In Views.py**
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+def get(self, request, stock_symbol):
+    try:
+        logger.info(f"Fetching data for stock: {stock_symbol}")
+        # Logic for fetching stock data
+    except Exception as e:
+        logger.error(f"Error while fetching stock data: {e}")
+        raise
+```
 
 ## Contato
 For questions or feedback, feel free to reach out:
