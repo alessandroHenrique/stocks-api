@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     try:
         symbol = event.get("symbol")
         if not symbol:
-            raise ValueError("Both 'symbol' parameter is required.")
+            raise ValueError("'symbol' parameter is required.")
 
         data = get_marketwatch_data(symbol)
 
@@ -35,7 +35,7 @@ def lambda_handler(event, context):
 
 def get_marketwatch_data(symbol):
     """
-    Faz scraping dos dados de performance e concorrentes da página do Marketwatch.
+    Scrapes performance and competitors data from the Marketwatch page.
     """
     url = MARKETWATCH_BASE_URL.format(symbol=symbol.lower())
     response = requests.get(url, proxies=PROXIES, verify=False)
