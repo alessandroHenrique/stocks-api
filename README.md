@@ -91,26 +91,97 @@ Retrieve performance data, pricing, and competitors for a specific stock.
 **Example Response**:
 ```json
 {
-    "status": "OK",
-    "company_code": "AAPL",
-    "company_name": "Apple Inc.",
-    "stock_values": {
-        "open_value": 150.0,
-        "high": 155.0,
-        "low": 145.0,
-        "close": 152.0
+  "status": "OK",
+  "purchased_amount": 0,
+  "purchased_status": "",
+  "request_data": "2024-11-20",
+  "company_code": "AAPL",
+  "company_name": "Apple Inc.",
+  "stock_values": {
+    "open_value": 228.06,
+    "high": 229.93,
+    "low": 225.89,
+    "close": 229
+  },
+  "performance_data": {
+    "five_days": 0.7,
+    "one_month": -0.33,
+    "three_months": 2.36,
+    "year_to_date": 19.37,
+    "one_year": 20.13
+  },
+  "competitors": [
+    {
+      "name": "Microsoft Corp.",
+      "market_cap": {
+        "currency": "USD",
+        "value": 3090000000000
+      }
     },
-    "performance_data": {
-        "five_days": 1.5,
-        "one_month": 3.2,
-        "three_months": 5.0,
-        "year_to_date": 56.4,
-        "one_year": 65.3
+    {
+      "name": "Alphabet Inc. Cl C",
+      "market_cap": {
+        "currency": "USD",
+        "value": 2160000000000.0002
+      }
     },
-    "competitors": [
-        {"name": "Microsoft Corp.", "market_cap": "$2.4T"},
-        {"name": "Google LLC", "market_cap": "$1.8T"}
-    ]
+    {
+      "name": "Alphabet Inc. Cl A",
+      "market_cap": {
+        "currency": "USD",
+        "value": 2160000000000.0002
+      }
+    },
+    {
+      "name": "Amazon.com Inc.",
+      "market_cap": {
+        "currency": "USD",
+        "value": 2130000000000
+      }
+    },
+    {
+      "name": "Meta Platforms Inc.",
+      "market_cap": {
+        "currency": "USD",
+        "value": 1430000000000
+      }
+    },
+    {
+      "name": "Samsung Electronics Co. Ltd.",
+      "market_cap": {
+        "currency": "KRW",
+        "value": 376850000000000
+      }
+    },
+    {
+      "name": "Samsung Electronics Co. Ltd. Pfd. Series 1",
+      "market_cap": {
+        "currency": "KRW",
+        "value": 376850000000000
+      }
+    },
+    {
+      "name": "Sony Group Corp.",
+      "market_cap": {
+        "currency": "JPY",
+        "value": 18310000000000
+      }
+    },
+    {
+      "name": "Dell Technologies Inc. Cl C",
+      "market_cap": {
+        "currency": "USD",
+        "value": 97590000000
+      }
+    },
+    {
+      "name": "HP Inc.",
+      "market_cap": {
+        "currency": "USD",
+        "value": 35350000000
+      }
+    }
+  ]
 }
 ```
 
@@ -152,39 +223,6 @@ The API uses Redis to cache stock data for quick retrieval. If a request is made
 
 ### AWS Lambda
 Key functionalities for interacting with external services (Polygon and MarketWatch) are offloaded to AWS Lambda, ensuring scalability and reducing latency.
-
-## Tests
-To run the test suite, use the following commands:
-
-```bash
-docker-compose run --rm web pytest --cov --cov-report term-missing --disable-warnings
-```
-
-or:
-
-```bash
-make test
-```
-This command executes unit tests and generates a coverage report.
-
-## Environment Variables
-The application requires the following environment variables to run:
-
-### API Keys
- - `POLYGON_API_KEY`: API key for Polygon.io.
-
-### Redis Configuration
- - `REDIS_HOST`: Host for Redis (default: redis).
- - `REDIS_PORT`: Port for Redis (default: 6379).
-
-### AWS Configuration
- - `AWS_ACCESS_KEY_ID`: AWS access key for Lambda integration.
- - `AWS_SECRET_ACCESS_KEY`: AWS secret key for Lambda integration.
- - `AWS_DEFAULT_REGION`: AWS region for the Lambda functions.
-
-### Proxy Configuration
- - `BRIGHTDATA_USER`: Username for BrightData proxy.
- - `BRIGHTDATA_PASSWORD`: Password for BrightData proxy.
 
 ## Contato
 For questions or feedback, feel free to reach out:

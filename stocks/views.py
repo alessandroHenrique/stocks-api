@@ -121,6 +121,7 @@ class StockAPIView(APIView):
         responses={200: StockResponseSerializer()},
     )
     def get(self, request, stock_symbol):
+        stock_symbol = stock_symbol.upper()
         cache_key = f"stock_{stock_symbol}"
         cached_data = cache.get(cache_key)
         last_valid_day = get_last_valid_day()
@@ -151,7 +152,6 @@ class StockAPIView(APIView):
             self.create_or_update_performance_data(stock, performance_data)
             self.create_or_update_competitors(stock, competitors)
 
-            stock = self.get_stock(stock_symbol)
             stock_serializer = StockSerializer(stock)
             data = stock_serializer.data
             cache.set(cache_key, data, timeout=86400 * 7)
