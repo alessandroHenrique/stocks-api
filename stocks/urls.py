@@ -3,5 +3,5 @@ from .views import StockAPIView
 
 
 urlpatterns = [
-    path("stock/<str:stock_symbol>/", StockAPIView.as_view(), name="stock_detail"),
+    path("stock/<str:stock_symbol>/", StockAPIView.as_view(), name="stock-detail"),
 ]

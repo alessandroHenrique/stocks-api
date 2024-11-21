@@ -172,6 +172,7 @@ class StockAPIView(APIView):
     )
     def post(self, request, stock_symbol):
         try:
+            stock_symbol = stock_symbol.upper()
             amount = request.data.get("amount")
             if not isinstance(amount, (int, float)) or amount < 0:
                 return Response(
@@ -184,6 +185,7 @@ class StockAPIView(APIView):
                 stock_data = {
                     "company_code": stock_symbol,
                     "purchased_amount": amount,
+                    "purchased_status": "active",
                 }
 
                 stock_serializer = StockSerializer(data=stock_data)
@@ -197,6 +199,7 @@ class StockAPIView(APIView):
                 if cache.get(cache_key):
                     data = cache.get(cache_key)
                     data["purchased_amount"] = stock.purchased_amount
+                    data["purchased_status"] = "active"
                 else:
                     data = stock
                 cache.set(cache_key, data, timeout=86400 * 7)

@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 from unittest.mock import patch
 from stocks.models import Stock
 from datetime import date
+from django.urls import reverse
 from stocks.utils import get_last_valid_day
 
 
@@ -56,7 +57,8 @@ class TestStockAPIView:
             },
         }[service_name]
 
-        response = self.client.get(f"/api/stock/AMZN/")
+        url = reverse("stocks:stock-detail", kwargs={"stock_symbol": "AMZN"})
+        response = self.client.get(url)
         assert response.status_code == 200
         data = response.json()
         assert data["company_code"] == "AMZN"
@@ -94,7 +96,8 @@ class TestStockAPIView:
             },
         }[service_name]
 
-        response = self.client.get("/api/stock/TSLA/")
+        url = reverse("stocks:stock-detail", kwargs={"stock_symbol": "TSLA"})
+        response = self.client.get(url)
         assert response.status_code == 200
         data = response.json()
         assert data["company_code"] == "TSLA"
@@ -103,9 +106,8 @@ class TestStockAPIView:
     def test_post_stock_add_units(self):
         """Test POST request to add purchased units to an existing stock"""
         with patch("stocks.views.StockAPIView.get_stock", return_value=self.stock):
-            response = self.client.post(
-                f"/api/stock/AAPL/", {"amount": 50}, format="json"
-            )
+            url = reverse("stocks:stock-detail", kwargs={"stock_symbol": "AAPL"})
+            response = self.client.post(url, {"amount": 50}, format="json")
             assert response.status_code == 201
             data = response.json()
             assert (
@@ -119,7 +121,8 @@ class TestStockAPIView:
 
     def test_post_stock_create_new(self):
         """Test POST request to create a new stock and add purchased units"""
-        response = self.client.post("/api/stock/NVDA/", {"amount": 20}, format="json")
+        url = reverse("stocks:stock-detail", kwargs={"stock_symbol": "NVDA"})
+        response = self.client.post(url, {"amount": 20}, format="json")
         assert response.status_code == 201
         data = response.json()
         assert (
@@ -158,7 +161,10 @@ class TestStockAPIView:
         }
 
         with patch("django.core.cache.cache.get", return_value=cache_data):
-            response = self.client.get(f"/api/stock/{self.stock.company_code}/")
+            url = reverse(
+                "stocks:stock-detail", kwargs={"stock_symbol": self.stock.company_code}
+            )
+            response = self.client.get(url)
             assert response.status_code == 200
             data = response.json()
 
